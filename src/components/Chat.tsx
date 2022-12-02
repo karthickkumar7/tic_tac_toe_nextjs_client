@@ -12,9 +12,9 @@ const Chat = (props: any) => {
             </p>
         </article>
     ) : (
-        <article className="px-2 py-1 mb-2 bg-slate-100 text-sm rounded">
+        <article className="px-2 py-1 mb-2 bg-slate-300 text-sm rounded">
             <p className="text-slate-500">user6996</p>
-            <p className="text-slate-900">
+            <p className="text-black">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Excepturi, quibusdam!
             </p>

@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const InfoAndPoints = () => {
+    const navigate = useNavigate();
+
     return (
         <section className="mt-10 p-2  text-white">
             <div className="mt-4 mb-8 flex flex-col justify-center items-center space-y-3 lg:hidden">
@@ -16,6 +19,7 @@ const InfoAndPoints = () => {
                             <th>name</th>
                             <th>wins</th>
                             <th>loss</th>
+                            <th>w/p</th>
                         </tr>
                     </thead>
                     <tbody className="my-4">
@@ -23,17 +27,22 @@ const InfoAndPoints = () => {
                             <td className="">soyboy1</td>
                             <td>12</td>
                             <td>2</td>
+                            <td>2%</td>
                         </tr>
-                        <tr className="flex justify-between">
+                        <tr className="my-1 flex justify-between">
                             <td className="">nigger</td>
                             <td>1</td>
                             <td>45</td>
+                            <td>45%</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div className="my-6 flex justify-center">
-                <button className="px-4 py-2 font-semibold rounded bg-red-500 uppercase">
+                <button
+                    className="px-4 py-2 font-semibold rounded bg-red-500 uppercase"
+                    onClick={() => navigate('/')}
+                >
                     leave
                 </button>
             </div>

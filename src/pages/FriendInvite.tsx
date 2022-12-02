@@ -1,33 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Board from '../components/Board';
 import ChatBoard from '../components/ChatBoard';
 import { AiOutlineMenu } from 'react-icons/ai';
 import Drawer from '../components/mobile/Drawer';
+import { RootState } from '../redux/store';
+import GameOverCard from '../components/GameOverCard';
+import { socket } from '../socket/socket.connection';
+import {
+    startGame,
+    switchTurn,
+    updateBoardOffTurn,
+} from '../redux/slices/gameSlice';
 
-export interface Cell {
-    id: string;
-    val: string;
+interface Member {
+    username: string;
+    socketId: string;
+    id: number;
+    roomId: string;
+}
+
+interface StartData {
+    members: Member[];
+    first: number;
 }
 
 const FriendInvite = () => {
-    const [board, setBoard] = useState<Cell[]>([]);
-    const [openDrawer, setOpenDrawer] = useState<boolean>(true);
+    const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
-    // board init
-    const boardinit = (): Cell[] => {
-        const board: Cell[] = [];
-        for (let i = 0; i < 9; i++) {
-            board.push({ id: i.toString(), val: 'X' });
-        }
-        return board;
+    const { gameover } = useSelector((state: RootState) => state.game);
+    const dispatch = useDispatch();
+
+    const startHandler = (data: StartData) => {
+        dispatch(startGame(data));
     };
 
     useEffect(() => {
-        setBoard(boardinit());
+        socket.on('start', startHandler);
+
+        return () => {
+            socket.off('start', startHandler);
+        };
     }, []);
 
     return (
-        <div className="w-screen h-screen lg:flex justify-evenly items-center bg-black relative">
+        <div className="w-screen h-screen bg-black relative">
             <AiOutlineMenu
                 width={40}
                 height={40}
@@ -35,8 +52,16 @@ const FriendInvite = () => {
                 className="absolute top-4 left-4 lg:hidden text-white"
             />
             {openDrawer && <Drawer setOpenDrawer={setOpenDrawer} />}
-            <Board board={board} />
-            <ChatBoard />
+            <div
+                className={`${
+                    gameover && 'opacity-30'
+                } w-full h-full lg:flex justify-evenly items-center`}
+            >
+                <Board />
+                <ChatBoard />
+            </div>
+
+            {gameover && <GameOverCard />}
         </div>
     );
 };

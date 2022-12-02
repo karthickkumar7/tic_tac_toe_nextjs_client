@@ -11,13 +11,13 @@ const ChatBoard = () => {
                     <Chat me={false} />
                     <Chat me={true} />
                 </section>
-                <section className="w-full h-[7%] flex justify-between">
+                <section className="w-full h-[8%] flex justify-between sm:border-hidden border p-2">
                     <input
                         type="text"
                         placeholder="chat"
                         className="w-[75%] h-full bg-gray-900 text-white outline-none px-2 py-1 border-blue-500 lg:border-b"
                     />
-                    <button className="w-[20%] h-full py-1  rounded text-white bg-blue-600 uppercase">
+                    <button className="w-[20%] h-full py-1 rounded text-white bg-blue-600 text-sm uppercase">
                         send
                     </button>
                 </section>
