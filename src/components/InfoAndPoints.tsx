@@ -1,15 +1,26 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { RootState } from '../redux/store';
 
 const InfoAndPoints = () => {
+    const { room, turn, user, opp } = useSelector(
+        (state: RootState) => state.game
+    );
     const navigate = useNavigate();
 
     return (
         <section className="mt-10 p-2  text-white">
             <div className="mt-4 mb-8 flex flex-col justify-center items-center space-y-3 lg:hidden">
                 <h2 className="text-lg uppercase">players</h2>
-                <p>nigger!</p>
-                <p>soyboy!</p>
+                {room.members.map((pl) => (
+                    <p
+                        key={pl.id}
+                        className={`${turn && 'text-lg bg-green-400'}`}
+                    >
+                        {pl.username}
+                    </p>
+                ))}
             </div>
             <div className="mt-10 py-4 lg:w-[400px] flex flex-col justify-center items-center space-y-3 bg-gray-800 rounded">
                 <h2 className="text-lg uppercase">points</h2>
@@ -24,16 +35,21 @@ const InfoAndPoints = () => {
                     </thead>
                     <tbody className="my-4">
                         <tr className="my-1 flex justify-between">
-                            <td className="">soyboy1</td>
-                            <td>12</td>
-                            <td>2</td>
-                            <td>2%</td>
+                            <td className="">{user.username}</td>
+                            <td className="">{user.stats.wins}</td>
+                            <td className="">{user.stats.loss}</td>
+                            <td className="">
+                                {' '}
+                                {user.stats.winPercent.toString().slice(0, 5)} %
+                            </td>
                         </tr>
                         <tr className="my-1 flex justify-between">
-                            <td className="">nigger</td>
-                            <td>1</td>
-                            <td>45</td>
-                            <td>45%</td>
+                            <td className="">{opp.username}</td>
+                            <td className="">{opp.stats.wins}</td>
+                            <td className="">{opp.stats.loss}</td>
+                            <td className="">
+                                {opp.stats.winPercent.toString().slice(0, 5)} %
+                            </td>
                         </tr>
                     </tbody>
                 </table>

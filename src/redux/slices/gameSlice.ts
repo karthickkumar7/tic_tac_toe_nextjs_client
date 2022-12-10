@@ -2,43 +2,47 @@ import { createSlice } from '@reduxjs/toolkit';
 
 interface Message {
     message: string;
-    author: string;
+    id: string;
     username: string;
+    userId: number;
 }
 
-interface Member {
-    username: string;
-    socketId: string;
-    id: number;
-}
-
-interface Cell {
+export interface Cell {
     id: string;
     val: string;
 }
 
-interface User {
+export interface User {
+    id: number;
     username: string;
     socketId: string;
-    id: number | null;
     roomId: string;
+    stats: {
+        wins: number;
+        loss: number;
+        winPercent: number;
+    };
 }
 
-interface Room {
+export interface Room {
     roomId: string;
-    members: Member[];
+    members: User[];
     messages: Message[];
     full: boolean;
+    gameNo: number;
 }
 
 interface InitialState {
     board: Cell[];
     user: User;
     room: Room;
+    opp: User;
     turn: boolean;
     success: boolean;
     mark: string;
     gameover: boolean;
+    occupied: string[];
+    winner: string;
 }
 
 const initialState: InitialState = {
@@ -54,21 +58,41 @@ const initialState: InitialState = {
         { id: '8', val: '' },
     ],
     user: {
-        id: null,
+        id: 0,
         socketId: '',
         username: '',
         roomId: '',
+        stats: {
+            wins: 0,
+            loss: 0,
+            winPercent: 0,
+        },
+    },
+    opp: {
+        id: 0,
+        socketId: '',
+        username: '',
+        roomId: '',
+        stats: {
+            wins: 0,
+            loss: 0,
+            winPercent: 0,
+        },
     },
     room: {
         roomId: '',
         members: [],
         messages: [],
         full: false,
+        gameNo: 0,
     },
     turn: false,
     success: false,
     mark: '',
     gameover: false,
+
+    occupied: [],
+    winner: '',
 };
 
 export const gameSlice = createSlice({
@@ -97,6 +121,13 @@ export const gameSlice = createSlice({
             state.success = true;
             state.room.members = payload.members;
             state.room.full = true;
+            state.room.gameNo++;
+
+            state.room.members.forEach((usr) => {
+                if (state.user.username !== usr.username) {
+                    state.opp = usr;
+                }
+            });
         },
 
         updateBoardOnTurn: (state, { payload }) => {
@@ -106,6 +137,7 @@ export const gameSlice = createSlice({
                 }
                 return cell;
             });
+            state.occupied.push(payload);
             state.turn = false;
         },
 
@@ -118,6 +150,57 @@ export const gameSlice = createSlice({
             });
             state.turn = true;
         },
+
+        setGameOver: (state) => {
+            state.gameover = true;
+            state.board = [
+                { id: '0', val: '' },
+                { id: '1', val: '' },
+                { id: '2', val: '' },
+                { id: '3', val: '' },
+                { id: '4', val: '' },
+                { id: '5', val: '' },
+                { id: '6', val: '' },
+                { id: '7', val: '' },
+                { id: '8', val: '' },
+            ];
+            state.occupied = [];
+
+            window.location.pathname = '/';
+        },
+
+        restartGame: (state) => {
+            state.gameover = false;
+            state.board = [
+                { id: '0', val: '' },
+                { id: '1', val: '' },
+                { id: '2', val: '' },
+                { id: '3', val: '' },
+                { id: '4', val: '' },
+                { id: '5', val: '' },
+                { id: '6', val: '' },
+                { id: '7', val: '' },
+                { id: '8', val: '' },
+            ];
+            state.occupied = [];
+        },
+
+        userUpdate: (state, { payload }) => {
+            state.user = payload;
+            state.gameover = true;
+        },
+
+        oppUserUpdate: (state, { payload }) => {
+            state.opp = payload.user;
+        },
+
+        createMessage: (state, { payload }) => {
+            state.room.messages.push(payload);
+        },
+
+        setWinner: (state, { payload }) => {
+            state.winner = payload;
+        },
     },
 });
 
@@ -127,6 +210,12 @@ export const {
     updateBoardOffTurn,
     updateBoardOnTurn,
     startGame,
+    setGameOver,
+    restartGame,
+    createMessage,
+    userUpdate,
+    oppUserUpdate,
+    setWinner,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

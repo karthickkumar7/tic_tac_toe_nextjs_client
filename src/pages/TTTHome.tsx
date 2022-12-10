@@ -12,6 +12,11 @@ interface Credentials {
         socketId: string;
         id: number;
         roomId: string;
+        stats: {
+            wins: number;
+            loss: number;
+            winPercent: number;
+        };
     };
     room: {
         roomId: string;
@@ -29,14 +34,13 @@ const TTTHome = () => {
     const navigate = useNavigate();
 
     const playCredentialsHandler = (data: Credentials) => {
-        console.log('pc cb');
         dispatch(updateUser(data));
     };
 
     const addUserHandler = () => {
         if (!(username && roomId)) return;
 
-        // send event to be
+        // send event to bk end
         socket.emit(
             'playcredentials',
             { username, roomId },

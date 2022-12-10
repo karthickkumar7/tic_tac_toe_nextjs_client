@@ -1,22 +1,31 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const Chat = (props: any) => {
-    const { me } = props;
+    const { userId, username, msg } = props;
 
-    return me ? (
-        <article className="px-2 py-1 mb-2 bg-blue-600 text-sm rounded">
-            <p className="text-slate-300">user6996</p>
-            <p className="text-white">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Excepturi, quibusdam!
+    const { user } = useSelector((state: RootState) => state.game);
+
+    return (
+        <article
+            className={`${
+                user.id === userId ? 'bg-blue-600' : 'bg-slate-300'
+            } px-2 py-1 mb-2  text-sm rounded`}
+        >
+            <p
+                className={`${
+                    user.id === userId ? 'text-slate-300' : 'text-slate-500'
+                }`}
+            >
+                {username}
             </p>
-        </article>
-    ) : (
-        <article className="px-2 py-1 mb-2 bg-slate-300 text-sm rounded">
-            <p className="text-slate-500">user6996</p>
-            <p className="text-black">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Excepturi, quibusdam!
+            <p
+                className={`${
+                    user.id === userId ? 'text-white' : 'text-black'
+                }`}
+            >
+                {msg}
             </p>
         </article>
     );
