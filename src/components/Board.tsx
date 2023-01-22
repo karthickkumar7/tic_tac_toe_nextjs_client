@@ -1,9 +1,8 @@
-import React, { BaseSyntheticEvent, useEffect } from 'react';
+import { BaseSyntheticEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    oppUserUpdate,
     setWinner,
-    updateBoardOffTurn,
+    updateAllOccupied,
     updateBoardOnTurn,
     User,
     userUpdate,
@@ -87,6 +86,9 @@ const Board = () => {
         }
         dispatch(updateBoardOnTurn(e.target.id));
         socket.emit('update', { roomId: room.roomId, cellId: e.target.id });
+
+        // push all the cells that are marked
+        dispatch(updateAllOccupied(e.target.id));
         return null;
     };
 

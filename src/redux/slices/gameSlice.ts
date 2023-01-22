@@ -42,6 +42,7 @@ interface InitialState {
     mark: string;
     gameover: boolean;
     occupied: string[];
+    allOccupied: string[];
     winner: string;
 }
 
@@ -90,8 +91,8 @@ const initialState: InitialState = {
     success: false,
     mark: '',
     gameover: false,
-
     occupied: [],
+    allOccupied: [],
     winner: '',
 };
 
@@ -201,6 +202,21 @@ export const gameSlice = createSlice({
         setWinner: (state, { payload }) => {
             state.winner = payload;
         },
+
+        updateAllOccupied: (state, { payload }) => {
+            state.allOccupied.push(payload);
+        },
+
+        resetGame: (state) => {
+            state.board = state.board.map((c) => {
+                return {
+                    ...c,
+                    val: '',
+                };
+            });
+            state.allOccupied = [];
+            state.occupied = [];
+        },
     },
 });
 
@@ -216,6 +232,8 @@ export const {
     userUpdate,
     oppUserUpdate,
     setWinner,
+    updateAllOccupied,
+    resetGame,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

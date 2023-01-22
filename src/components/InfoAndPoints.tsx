@@ -1,22 +1,29 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
+import { resetGame } from '../redux/slices/gameSlice';
 
 const InfoAndPoints = () => {
-    const { room, turn, user, opp } = useSelector(
+    const { room, turn, user, opp, allOccupied } = useSelector(
         (state: RootState) => state.game
     );
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     return (
         <section className="mt-10 p-2  text-white">
-            <div className="mt-4 mb-8 flex flex-col justify-center items-center space-y-3 lg:hidden">
+            <div className="mt-4 mb-8 flex flex-col justify-center items-center space-y-3">
                 <h2 className="text-lg uppercase">players</h2>
-                {room.members.map((pl) => (
+
+                {room?.members.map((pl) => (
                     <p
                         key={pl.id}
-                        className={`${turn && 'text-lg bg-green-400'}`}
+                        className={`${
+                            turn &&
+                            user.username === pl.username &&
+                            'px-2 rounded bg-green-400 text-black'
+                        }`}
                     >
                         {pl.username}
                     </p>
@@ -54,13 +61,21 @@ const InfoAndPoints = () => {
                     </tbody>
                 </table>
             </div>
-            <div className="my-6 flex justify-center">
+            <div className="my-6 flex justify-center space-x-2">
                 <button
                     className="px-4 py-2 font-semibold rounded bg-red-500 uppercase"
                     onClick={() => navigate('/')}
                 >
                     leave
                 </button>
+                {allOccupied.length >= 9 && (
+                    <button
+                        className="px-4 py-2 font-semibold rounded bg-amber-500 uppercase"
+                        onClick={() => dispatch(resetGame())}
+                    >
+                        reset
+                    </button>
+                )}
             </div>
         </section>
     );

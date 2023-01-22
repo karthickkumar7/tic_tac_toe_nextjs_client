@@ -1,7 +1,10 @@
 import { io, Socket } from 'socket.io-client';
+import { MessageData } from '../components/ChatBoard';
 import {
+    createMessage,
     oppUserUpdate,
     startGame,
+    updateAllOccupied,
     updateBoardOffTurn,
     User,
     userUpdate,
@@ -23,13 +26,15 @@ interface StartData {
 }
 
 export const connectSocket = () => {
-    socket = io('https://tictactoeservernestjs-production.up.railway.app/');
+    // socket = io('https://tictactoeservernestjs-production.up.railway.app/');
+    socket = io('http://localhost:5000');
 
     socket.on('start', (data: StartData) => {
         store.dispatch(startGame(data));
     });
 
     socket.on('update', (cellId: string) => {
+        store.dispatch(updateAllOccupied(cellId));
         store.dispatch(updateBoardOffTurn(cellId));
     });
 
@@ -51,6 +56,10 @@ export const connectSocket = () => {
     socket.on('loss', (data: User) => {
         store.dispatch(oppUserUpdate(data));
         socket.emit('restart', store.getState().game.room.roomId);
+    });
+
+    socket.on('message', (data: MessageData) => {
+        store.dispatch(createMessage(data));
     });
 
     return null;
