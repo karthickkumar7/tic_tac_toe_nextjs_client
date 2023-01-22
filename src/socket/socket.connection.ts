@@ -26,8 +26,8 @@ interface StartData {
 }
 
 export const connectSocket = () => {
-    // socket = io('https://tictactoeservernestjs-production.up.railway.app/');
-    socket = io('http://localhost:5000');
+    socket = io('https://tictactoeservernestjs-production.up.railway.app/');
+    // socket = io('http://localhost:5000');
 
     socket.on('start', (data: StartData) => {
         store.dispatch(startGame(data));
