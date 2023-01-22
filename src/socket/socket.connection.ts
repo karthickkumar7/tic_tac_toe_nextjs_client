@@ -22,14 +22,8 @@ interface StartData {
     first: number;
 }
 
-interface StatData {
-    wins: number;
-    loss: number;
-    winPercent: number;
-}
-
 export const connectSocket = () => {
-    socket = io('http://localhost:5000');
+    socket = io('https://tictactoeservernestjs-production.up.railway.app/');
 
     socket.on('start', (data: StartData) => {
         store.dispatch(startGame(data));

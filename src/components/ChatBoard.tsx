@@ -50,16 +50,16 @@ const ChatBoard = () => {
                         </React.Fragment>
                     ))}
                 </section>
-                <section className="w-full h-[8%] flex justify-between sm:border-hidden border p-2">
+                <section className="w-full h-[8%] flex justify-between border-hidden lg:p-2">
                     <input
                         type="text"
                         placeholder="chat"
                         value={msgText}
                         onChange={(e) => setMsgText(e.target.value)}
-                        className="w-[75%] h-full bg-gray-900 text-white outline-none px-2 py-1 border-blue-500 lg:border-b"
+                        className="w-[75%] h-full bg-gray-900 text-white outline-none px-2 py-1 border-blue-500 border-b"
                     />
                     <button
-                        className="w-[20%] h-full py-1 rounded text-white bg-blue-600 text-sm uppercase"
+                        className="w-[20%] h-full lg:py-1 rounded text-white bg-blue-600 text-sm uppercase"
                         onClick={sendMessageHandler}
                     >
                         send
